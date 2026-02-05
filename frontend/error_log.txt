@@ -1,0 +1,2 @@
+src/controllers/useLicenseController.ts(2,10): error TS1484: 'License' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/controllers/useLicenseController.ts(2,19): error TS1484: 'LicenseCreateRequest' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
