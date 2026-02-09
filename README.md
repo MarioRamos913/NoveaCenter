@@ -2,7 +2,7 @@
 
 Bienvenido a **NovaCenter**, un sistema moderno y centralizado para la generación, administración y validación de licencias de software. Este proyecto está diseñado con una arquitectura modular, separando claramente el **Backend** (lógica de negocio y API) del **Frontend** (interfaz de usuario).
 
-## 🗂 Estructura del Proyecto
+##  Estructura del Proyecto
 
 El proyecto se divide en dos carpetas principales:
 
@@ -33,7 +33,7 @@ npm run dev
 ```
 > La aplicación abrirá en `http://localhost:5173`.
 
-## � Guía de Uso
+##  Guía de Uso
 
 Una vez que ambos servidores (Backend y Frontend) están corriendo:
 
@@ -47,7 +47,7 @@ Una vez que ambos servidores (Backend y Frontend) están corriendo:
     *   A la derecha verás una tabla estilizada con todas las licencias registradas.
     *   Podrás ver el estado (ACTIVA/REVOCADA) y la fecha de vencimiento.
 
-## �🛠 Tecnologías Principales
+## 🛠 Tecnologías Principales
 
 *   **Node.js & Express**: Para un backend rápido y escalable.
 *   **React & Vite**: Para una interfaz de usuario dinámica y veloz.

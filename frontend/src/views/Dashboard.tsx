@@ -12,8 +12,8 @@ export default function Dashboard() {
 
             {/* Ambient Background Effects */}
             <div className="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-neon-indigo/10 rounded-full blur-[120px] animate-[float_10s_ease-in-out_infinite] will-change-transform" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-neon-purple/10 rounded-full blur-[120px] animate-[float_8s_ease-in-out_infinite_reverse] will-change-transform" />
+                <div className="ambient-orb absolute top-[-10%] left-[-10%] w-[40%] h-[40%]" />
+                <div className="ambient-orb absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%]" style={{ animationDelay: '-5s' }} />
             </div>
 
             <header className="max-w-7xl mx-auto mb-16 text-center relative z-10">
