@@ -1,5 +1,9 @@
 DROP TABLE IF EXISTS licenses;
 
+
+CREATE DATABASE BD_NovaCenter;
+USE BD_NovaCenter;
+
 CREATE TABLE licenses (
     key VARCHAR(255) PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,

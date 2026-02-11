@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLicenses } from '../hooks/useLicenses';
 import type { LicenseCreateRequest } from '../models/License';
 import DatePicker from './DatePicker';
+import './CreateLicenseForm.css';
 
 export default function CreateLicenseForm() {
     const { createLicense, isCreating } = useLicenses();
@@ -36,58 +37,86 @@ export default function CreateLicenseForm() {
     };
 
     return (
-        <section className="col-span-1 lg:col-span-4 h-fit sticky top-8">
-            <div className="premium-panel rounded-2xl p-8 shadow-2xl">
-                <div className="flex items-center justify-between mb-8 border-b border-white/5 pb-6">
-                    <h2 className="text-2xl font-display font-semibold text-white">Nueva Suscripción</h2>
-                    <div className="w-2 h-2 rounded-full bg-neon-purple shadow-[0_0_10px_currentColor] animate-pulse"></div>
-                </div>
+        <section className="form-section" aria-labelledby="form-title">
+            <div className="form-panel">
+                <header className="form-header">
+                    <h2 id="form-title" className="form-title">Nueva Suscripción</h2>
+                    <div className="form-pulse-dot" aria-hidden="true"></div>
+                </header>
 
-                <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                <form onSubmit={handleSubmit} className="license-form">
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Nombres</label>
-                            <input name="firstName" value={formData.firstName} onChange={handleChange} required
-                                className="w-full bg-surface/50 border border-white/5 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none input-glow transition-all"
-                                placeholder="Juan" />
+                    <div className="form-grid">
+                        <div className="form-group">
+                            <label htmlFor="firstName" className="form-label">Nombres</label>
+                            <input
+                                id="firstName"
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                required
+                                className="form-input"
+                                placeholder="Juan"
+                            />
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Apellidos</label>
-                            <input name="lastName" value={formData.lastName} onChange={handleChange} required
-                                className="w-full bg-surface/50 border border-white/5 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none input-glow transition-all"
-                                placeholder="Pérez" />
+                        <div className="form-group">
+                            <label htmlFor="lastName" className="form-label">Apellidos</label>
+                            <input
+                                id="lastName"
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                required
+                                className="form-input"
+                                placeholder="Pérez"
+                            />
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Cédula / ID</label>
-                        <input name="idNumber" value={formData.idNumber} onChange={handleChange} required
-                            className="w-full bg-surface/50 border border-white/5 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none input-glow transition-all font-mono"
-                            placeholder="000-000000-0" />
+                    <div className="form-group">
+                        <label htmlFor="idNumber" className="form-label">Cédula / ID</label>
+                        <input
+                            id="idNumber"
+                            name="idNumber"
+                            value={formData.idNumber}
+                            onChange={handleChange}
+                            required
+                            className="form-input input-mono"
+                            placeholder="000-000000-0"
+                        />
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Organización</label>
-                        <div className="relative group">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    <div className="form-group">
+                        <label htmlFor="businessName" className="form-label">Organización</label>
+                        <div className="input-with-icon">
+                            <div className="input-icon" aria-hidden="true">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                             </div>
-                            <input name="businessName" value={formData.businessName} onChange={handleChange}
-                                className="w-full bg-surface/50 border border-white/5 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none input-glow transition-all"
-                                placeholder="Nombre del Negocio" />
+                            <input
+                                id="businessName"
+                                name="businessName"
+                                value={formData.businessName}
+                                onChange={handleChange}
+                                className="form-input"
+                                placeholder="Nombre del Negocio"
+                            />
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Sector</label>
-                        <input name="sector" value={formData.sector} onChange={handleChange}
-                            className="w-full bg-surface/50 border border-white/5 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none input-glow transition-all"
-                            placeholder="Ej. Gastronomía" />
+                    <div className="form-group">
+                        <label htmlFor="sector" className="form-label">Sector</label>
+                        <input
+                            id="sector"
+                            name="sector"
+                            value={formData.sector}
+                            onChange={handleChange}
+                            className="form-input"
+                            placeholder="Ej. Gastronomía"
+                        />
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Fecha de Vencimiento</label>
+                    <div className="form-group">
+                        <label className="form-label">Fecha de Vencimiento</label>
                         <DatePicker
                             selectedDate={expirationDate}
                             onChange={setExpirationDate}
@@ -95,22 +124,21 @@ export default function CreateLicenseForm() {
                         />
                     </div>
 
-                    <button type="submit" disabled={isCreating || !expirationDate}
-                        className="mt-4 w-full relative group overflow-hidden rounded-xl p-[1px]">
-                        <div className="absolute inset-0 bg-gradient-to-r from-neon-indigo via-neon-purple to-neon-pink opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="relative bg-void h-full w-full rounded-[11px] hover:bg-opacity-0 transition-all duration-300">
-                            <div className="relative flex items-center justify-center py-3.5 px-4 h-full w-full">
+                    <div className="submit-button-wrapper">
+                        <div className="submit-button-gradient"></div>
+                        <div className="submit-button-bg">
+                            <button type="submit" disabled={isCreating || !expirationDate} className="submit-button">
                                 {isCreating ? (
-                                    <span className="flex items-center justify-center gap-2 text-white font-medium">
-                                        <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    <span className="loading-spinner">
+                                        <svg className="spinner-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                         Generando...
                                     </span>
                                 ) : (
-                                    <span className="text-white font-bold tracking-wide group-hover:text-white transition-colors">Generar Licencia</span>
+                                    <span>Generar Licencia</span>
                                 )}
-                            </div>
+                            </button>
                         </div>
-                    </button>
+                    </div>
                 </form>
             </div>
         </section >

@@ -6,7 +6,10 @@
     "scripts": {
         "start": "node dist/server.js",
         "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-        "build": "tsc"
+        "build": "tsc",
+        "migrate": "node migrate.js up",
+        "migrate:down": "node migrate.js down",
+        "migrate:create": "node-pg-migrate create --config-file .migrate.json"
     },
     "keywords": [],
     "author": "",
@@ -23,6 +26,7 @@
         "@types/express": "^4.17.21",
         "@types/node": "^20.12.7",
         "@types/pg": "^8.16.0",
+        "node-pg-migrate": "^8.0.4",
         "ts-node-dev": "^2.0.0",
         "typescript": "^5.4.5"
     }

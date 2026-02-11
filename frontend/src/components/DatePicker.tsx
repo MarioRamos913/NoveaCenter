@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import './DatePicker.css';
 
 interface DatePickerProps {
     selectedDate: Date | null;
@@ -72,63 +73,68 @@ export default function DatePicker({ selectedDate, onChange, minDate = new Date(
     };
 
     return (
-        <div ref={containerRef} className="relative">
+        <div ref={containerRef} className="datepicker-container">
             {/* Input trigger */}
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full bg-surface/50 border border-white/5 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none input-glow transition-all text-left flex items-center justify-between"
+                className="datepicker-trigger"
+                aria-haspopup="dialog"
+                aria-expanded={isOpen}
+                aria-label={selectedDate ? `Fecha seleccionada: ${formatDate(selectedDate)}` : 'Seleccionar fecha de vencimiento'}
             >
-                <span className={selectedDate ? 'text-slate-100' : 'text-slate-600'}>
+                <span className={`datepicker-trigger-text ${!selectedDate ? 'placeholder' : ''}`}>
                     {formatDate(selectedDate)}
                 </span>
-                <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="datepicker-trigger-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
             </button>
 
             {/* Calendar dropdown */}
             {isOpen && (
-                <div className="absolute z-50 mt-2 premium-panel rounded-xl shadow-2xl p-4 w-80 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="datepicker-dropdown" role="dialog" aria-label="Calendario">
                     {/* Header */}
-                    <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/5">
+                    <header className="datepicker-header">
                         <button
                             type="button"
                             onClick={handlePrevMonth}
-                            className="p-2 rounded-lg text-slate-400 hover:bg-white/5 hover:text-slate-200 transition-all"
+                            className="datepicker-nav-button"
+                            aria-label="Mes anterior"
                         >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
                             </svg>
                         </button>
-                        <span className="font-display font-semibold text-white">
+                        <span className="datepicker-month-year" aria-live="polite">
                             {monthNames[month]} {year}
                         </span>
                         <button
                             type="button"
                             onClick={handleNextMonth}
-                            className="p-2 rounded-lg text-slate-400 hover:bg-white/5 hover:text-slate-200 transition-all"
+                            className="datepicker-nav-button"
+                            aria-label="Mes siguiente"
                         >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
                             </svg>
                         </button>
-                    </div>
+                    </header>
 
                     {/* Day names */}
-                    <div className="grid grid-cols-7 gap-1 mb-2">
+                    <div className="datepicker-daynames" aria-hidden="true">
                         {dayNames.map(day => (
-                            <div key={day} className="text-center text-[10px] font-bold text-slate-500 uppercase py-1">
+                            <div key={day} className="datepicker-dayname">
                                 {day}
                             </div>
                         ))}
                     </div>
 
                     {/* Calendar grid */}
-                    <div className="grid grid-cols-7 gap-1">
+                    <div className="datepicker-grid" role="grid">
                         {/* Empty cells for days before month starts */}
                         {Array.from({ length: startingDayOfWeek }).map((_, i) => (
-                            <div key={`empty-${i}`} className="aspect-square" />
+                            <div key={`empty-${i}`} className="datepicker-empty" role="gridcell" aria-hidden="true" />
                         ))}
 
                         {/* Days of the month */}
@@ -143,13 +149,13 @@ export default function DatePicker({ selectedDate, onChange, minDate = new Date(
                                     type="button"
                                     onClick={() => !disabled && handleDateClick(day)}
                                     disabled={disabled}
-                                    className={`aspect-square rounded-lg text-sm font-medium transition-all
-                                        ${disabled
-                                            ? 'text-slate-700 cursor-not-allowed'
-                                            : selected
-                                                ? 'bg-gradient-to-br from-neon-indigo to-neon-purple text-white shadow-lg scale-105'
-                                                : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                                    className={`datepicker-day ${disabled ? 'disabled' :
+                                        selected ? 'selected' :
+                                            'available'
                                         }`}
+                                    role="gridcell"
+                                    aria-selected={selected}
+                                    aria-label={`${day} de ${monthNames[month]} ${year}`}
                                 >
                                     {day}
                                 </button>

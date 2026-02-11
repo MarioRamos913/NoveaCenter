@@ -50,8 +50,9 @@ Una vez que ambos servidores (Backend y Frontend) están corriendo:
 ## 🛠 Tecnologías Principales
 
 *   **Node.js & Express**: Para un backend rápido y escalable.
+*   **PostgreSQL**: Base de datos relacional con sistema de migraciones.
 *   **React & Vite**: Para una interfaz de usuario dinámica y veloz.
-*   **Tailwind CSS v4**: Para un diseño moderno, responsivo y mantenible.
+*   **CSS Vanilla**: Estilos modulares para un diseño moderno y mantenible.
 *   **TypeScript**: Utilizamos TypeScript en todo el proyecto para garantizar un código más robusto y con menos errores.
 
 ---

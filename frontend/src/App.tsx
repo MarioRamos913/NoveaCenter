@@ -1,8 +1,11 @@
 import Dashboard from './views/Dashboard'
+import { ToastProvider } from './components/Toast'
 
 function App() {
   return (
-    <Dashboard />
+    <ToastProvider>
+      <Dashboard />
+    </ToastProvider>
   )
 }
 

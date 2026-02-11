@@ -1,157 +1,157 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap');
-@import "tailwindcss";
 
-@theme {
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-
-  /* Deep Space Palette */
-  --color-void: #030712;    /* Slate 950+ usually, but specifically 030712 is nice */
-  --color-surface: #0B0F1A; /* Slightly lighter void */
-  --color-glass: rgba(255, 255, 255, 0.03);
-  
-  /* Brand Neons (New Purple Palette) */
-  --color-neon-indigo: #6237A0;   /* Medium-dark purple */
-  --color-neon-purple: #9754CB;   /* Medium-light purple */
-  --color-neon-pink: #DEACF5;     /* Light lavender */
-  --color-neon-cyan: #9754CB;     /* Reusing medium purple */
-  --color-neon-blue: #6237A0;     /* Medium-dark purple */
-
-  /* Extended Brand Palette (New Purple Scheme) */
-  --color-brand-50: #DEACF5;    /* Lightest */
-  --color-brand-100: #d69ff2;
-  --color-brand-200: #c584ea;
-  --color-brand-300: #b369e2;
-  --color-brand-400: #a24eda;
-  --color-brand-500: #9754CB;   /* Medium-light purple */
-  --color-brand-600: #7e46b0;
-  --color-brand-700: #6237A0;   /* Medium-dark purple */
-  --color-brand-800: #4d2b7d;
-  --color-brand-900: #381f5a;
-  --color-brand-950: #28104E;   /* Darkest */
-}
-
+/* Variables CSS */
 :root {
-  font-family: 'Inter', system-ui, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  
-  color-scheme: dark;
-  color: #F8FAFC; /* Slate 50 */
-  background-color: var(--color-void);
+    /* Fuentes */
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    /* Deep Space Palette */
+    --color-void: #030712;
+    --color-surface: #0B0F1A;
+    --color-glass: rgba(255, 255, 255, 0.03);
+
+    /* Brand Neons (Purple Palette) */
+    --color-neon-indigo: #6237A0;
+    --color-neon-purple: #9754CB;
+    --color-neon-pink: #DEACF5;
+    --color-neon-cyan: #9754CB;
+    --color-neon-blue: #6237A0;
+
+    /* Extended Brand Palette */
+    --color-brand-50: #DEACF5;
+    --color-brand-100: #d69ff2;
+    --color-brand-200: #c584ea;
+    --color-brand-300: #b369e2;
+    --color-brand-400: #a24eda;
+    --color-brand-500: #9754CB;
+    --color-brand-600: #7e46b0;
+    --color-brand-700: #6237A0;
+    --color-brand-800: #4d2b7d;
+    --color-brand-900: #381f5a;
+    --color-brand-950: #28104E;
+
+    /* Typography */
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    font-weight: 400;
+
+    color-scheme: dark;
+    color: #F8FAFC;
+    background-color: var(--color-void);
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background: linear-gradient(180deg, #000000 0%, #28104E 100%);
-  background-attachment: fixed;
-  position: relative;
-  overflow-x: hidden;
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #000000 0%, #28104E 100%);
+    background-attachment: fixed;
+    position: relative;
+    overflow-x: hidden;
 }
 
 /* Tech Schema Background */
 body::before,
 body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  line-height: 1.5;
-  color: rgba(151, 84, 203, 0.15);
-  overflow: hidden;
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(151, 84, 203, 0.15);
+    overflow: hidden;
 }
 
 /* Tech Pattern Layer 1 - Optimized Grid */
 body::before {
-  background-image: 
-    linear-gradient(90deg, rgba(151, 84, 203, 0.02) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(151, 84, 203, 0.02) 1px, transparent 1px);
-  background-size: 50px 50px;
-  opacity: 0.4;
+    background-image: 
+        linear-gradient(90deg, rgba(151, 84, 203, 0.02) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(151, 84, 203, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.4;
 }
 
 /* Tech Pattern Layer 2 - Hexagons & Accents */
 body::after {
-  background-image: 
-    linear-gradient(30deg, transparent 48%, rgba(98, 55, 160, 0.04) 48%, rgba(98, 55, 160, 0.04) 52%, transparent 52%),
-    linear-gradient(-30deg, transparent 48%, rgba(98, 55, 160, 0.04) 48%, rgba(98, 55, 160, 0.04) 52%, transparent 52%),
-    radial-gradient(circle at 15% 15%, rgba(222, 172, 245, 0.06), transparent 25%),
-    radial-gradient(circle at 85% 85%, rgba(151, 84, 203, 0.05), transparent 25%);
-  background-size: 
-    100px 173px,
-    100px 173px,
-    800px 800px,
-    800px 800px;
-  background-position: 
-    0 0,
-    50px 86.5px,
-    0 0,
-    100% 100%;
-  opacity: 0.5;
-  animation: tech-pulse-light 12s ease-in-out infinite;
+    background-image: 
+        linear-gradient(30deg, transparent 48%, rgba(98, 55, 160, 0.04) 48%, rgba(98, 55, 160, 0.04) 52%, transparent 52%),
+        linear-gradient(-30deg, transparent 48%, rgba(98, 55, 160, 0.04) 48%, rgba(98, 55, 160, 0.04) 52%, transparent 52%),
+        radial-gradient(circle at 15% 15%, rgba(222, 172, 245, 0.06), transparent 25%),
+        radial-gradient(circle at 85% 85%, rgba(151, 84, 203, 0.05), transparent 25%);
+    background-size: 
+        100px 173px,
+        100px 173px,
+        800px 800px,
+        800px 800px;
+    background-position: 
+        0 0,
+        50px 86.5px,
+        0 0,
+        100% 100%;
+    opacity: 0.5;
+    animation: tech-pulse-light 12s ease-in-out infinite;
 }
 
 /* Animations */
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 10px rgba(151, 84, 203, 0.2); }
-  50% { box-shadow: 0 0 20px rgba(151, 84, 203, 0.5); }
+    0%, 100% { box-shadow: 0 0 10px rgba(151, 84, 203, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(151, 84, 203, 0.5); }
 }
 
 @keyframes tech-pulse-light {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.6; }
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.6; }
 }
 
 /* Utilities */
 .font-display {
-  font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-display);
 }
 
 /* Performance-optimized panel (no backdrop-filter) */
 .premium-panel {
-  background: linear-gradient(135deg, 
-    rgba(15, 23, 42, 0.95) 0%, 
-    rgba(11, 15, 26, 0.98) 100%
-  );
-  border: 1px solid rgba(151, 84, 203, 0.12);
-  box-shadow: 
-    0 0 0 1px rgba(255, 255, 255, 0.02),
-    0 8px 32px -4px rgba(0, 0, 0, 0.4),
-    0 20px 64px -8px rgba(40, 16, 78, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    background: linear-gradient(135deg, 
+        rgba(15, 23, 42, 0.95) 0%, 
+        rgba(11, 15, 26, 0.98) 100%
+    );
+    border: 1px solid rgba(151, 84, 203, 0.12);
+    box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.02),
+        0 8px 32px -4px rgba(0, 0, 0, 0.4),
+        0 20px 64px -8px rgba(40, 16, 78, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 /* Ambient orbs (no blur) */
 .ambient-orb {
-  background: radial-gradient(circle, 
-    rgba(151, 84, 203, 0.08) 0%, 
-    transparent 70%
-  );
-  will-change: transform;
-  animation: float 10s ease-in-out infinite;
+    background: radial-gradient(circle, 
+        rgba(151, 84, 203, 0.08) 0%, 
+        transparent 70%
+    );
+    will-change: transform;
+    animation: float 10s ease-in-out infinite;
 }
 
 .input-glow:focus {
-  box-shadow: 0 0 0 2px rgba(151, 84, 203, 0.3);
-  border-color: rgba(151, 84, 203, 0.5);
+    box-shadow: 0 0 0 2px rgba(151, 84, 203, 0.3);
+    border-color: rgba(151, 84, 203, 0.5);
 }
 
 /* Custom Scrollbar */
@@ -159,13 +159,16 @@ body::after {
     width: 6px;
     height: 6px;
 }
+
 ::-webkit-scrollbar-track {
     background: transparent; 
 }
+
 ::-webkit-scrollbar-thumb {
     background: #334155; 
     border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: #475569; 
 }

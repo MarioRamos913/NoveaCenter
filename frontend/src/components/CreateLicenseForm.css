@@ -1,0 +1,288 @@
+/* CreateLicenseForm.css - Estilos para el formulario de creación de licencias */
+
+/* Contenedor principal */
+.form-section {
+    grid-column: span 1;
+    height: fit-content;
+    position: sticky;
+    top: 2rem;
+}
+
+@media (min-width: 1024px) {
+    .form-section {
+        grid-column: span 4;
+    }
+}
+
+.form-panel {
+    background: linear-gradient(135deg, 
+        rgba(15, 23, 42, 0.95) 0%, 
+        rgba(11, 15, 26, 0.98) 100%
+    );
+    border: 1px solid rgba(151, 84, 203, 0.12);
+    box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.02),
+        0 8px 32px -4px rgba(0, 0, 0, 0.4),
+        0 20px 64px -8px rgba(40, 16, 78, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Header del formulario */
+.form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 1.5rem;
+}
+
+.form-title {
+    font-size: 1.5rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    color: white;
+}
+
+.form-pulse-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: #9754CB;
+    box-shadow: 0 0 10px currentColor;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Formulario */
+.license-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Grid de inputs */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+/* Grupos de input */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-size: 11px;
+    font-weight: bold;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-left: 0.25rem;
+}
+
+.form-input {
+    width: 100%;
+    background: rgba(11, 15, 26, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: #f1f5f9;
+    transition: all 0.2s;
+}
+
+.form-input::placeholder {
+    color: #475569;
+}
+
+.form-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(151, 84, 203, 0.3);
+    border-color: rgba(151, 84, 203, 0.5);
+}
+
+.form-input.input-mono {
+    font-family: monospace;
+}
+
+/* Input con icono */
+.input-with-icon {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    padding-left: 0.75rem;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    color: #64748b;
+}
+
+.input-icon svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.input-with-icon .form-input {
+    padding-left: 2.5rem;
+}
+
+/* Botón de submit */
+.submit-button-wrapper {
+    margin-top: 1rem;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    padding: 1px;
+}
+
+.submit-button-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, #6237A0, #9754CB, #DEACF5);
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.submit-button-wrapper:hover .submit-button-gradient {
+    opacity: 1;
+}
+
+.submit-button-bg {
+    position: relative;
+    background: #030712;
+    height: 100%;
+    width: 100%;
+    border-radius: 11px;
+    transition: all 0.3s;
+}
+
+.submit-button-wrapper:hover .submit-button-bg {
+    background-opacity: 0;
+}
+
+.submit-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.875rem 1rem;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    transition: color 0.3s;
+}
+
+.submit-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.submit-button-wrapper:hover .submit-button {
+    color: white;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: white;
+    font-weight: 500;
+}
+
+.spinner-icon {
+    animation: spin 1s linear infinite;
+    height: 1.25rem;
+    width: 1.25rem;
+}
+
+.spinner-icon circle {
+    opacity: 0.25;
+}
+
+.spinner-icon path {
+    opacity: 0.75;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .form-section {
+        position: relative;
+        top: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-section {
+        grid-column: span 1;
+    }
+
+    .form-panel {
+        padding: 1.5rem;
+    }
+
+    .form-title {
+        font-size: 1.25rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-panel {
+        padding: 1rem;
+    }
+
+    .form-title {
+        font-size: 1.125rem;
+    }
+
+    .form-label {
+        font-size: 10px;
+    }
+
+    .form-input {
+        padding: 0.625rem 0.875rem;
+        font-size: 0.8125rem;
+    }
+}
