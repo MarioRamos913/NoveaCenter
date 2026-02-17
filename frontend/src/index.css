@@ -3,33 +3,47 @@
 /* Variables CSS */
 :root {
     /* Fuentes */
-    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
     --font-display: 'Space Grotesk', system-ui, sans-serif;
 
-    /* Deep Space Palette */
-    --color-void: #030712;
-    --color-surface: #0B0F1A;
-    --color-glass: rgba(255, 255, 255, 0.03);
+    /* Enterprise Dark-Purple Palette */
+    
+    /* Backgrounds - Deep & Rich */
+    --bg-void: #05050A; /* Deepest purple-black */
+    --bg-surface-1: #0F0E17; /* Card background */
+    --bg-surface-2: #161522; /* Table/Panel background */
+    --bg-surface-3: #201E30; /* Hover/Active states */
 
-    /* Brand Neons (Purple Palette) */
-    --color-neon-indigo: #6237A0;
-    --color-neon-purple: #9754CB;
-    --color-neon-pink: #DEACF5;
-    --color-neon-cyan: #9754CB;
-    --color-neon-blue: #6237A0;
+    /* Text Colors */
+    --text-main: #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-muted: #64748B;
+    --text-accent: #E9D5FF;
 
-    /* Extended Brand Palette */
-    --color-brand-50: #DEACF5;
-    --color-brand-100: #d69ff2;
-    --color-brand-200: #c584ea;
-    --color-brand-300: #b369e2;
-    --color-brand-400: #a24eda;
-    --color-brand-500: #9754CB;
-    --color-brand-600: #7e46b0;
-    --color-brand-700: #6237A0;
-    --color-brand-800: #4d2b7d;
-    --color-brand-900: #381f5a;
-    --color-brand-950: #28104E;
+    /* Accents - Sophisticated Purple */
+    --intent-primary: #7C3AED;
+    --intent-primary-hover: #6D28D9;
+    --intent-primary-light: #8B5CF6;
+    --intent-success: #10B981;
+    --intent-danger: #EF4444;
+    --intent-warning: #F59E0B;
+
+    /* Borders & Separators */
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-medium: rgba(255, 255, 255, 0.12);
+    --border-accent: rgba(124, 58, 237, 0.3);
+
+    /* Effects */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+    --glow-primary: 0 0 20px rgba(124, 58, 237, 0.15);
+
+    /* Layout Tokens */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
 
     /* Typography */
     font-family: var(--font-sans);
@@ -37,8 +51,8 @@
     font-weight: 400;
 
     color-scheme: dark;
-    color: #F8FAFC;
-    background-color: var(--color-void);
+    color: var(--text-main);
+    background-color: var(--bg-void);
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -50,7 +64,7 @@ body {
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
-    background: linear-gradient(180deg, #000000 0%, #28104E 100%);
+    background: radial-gradient(circle at 50% 0%, #1a1625 0%, var(--bg-void) 60%);
     background-attachment: fixed;
     position: relative;
     overflow-x: hidden;
@@ -69,38 +83,25 @@ body::after {
     font-family: 'Courier New', monospace;
     font-size: 14px;
     line-height: 1.5;
-    color: rgba(151, 84, 203, 0.15);
+    color: var(--intent-primary);
     overflow: hidden;
 }
 
 /* Tech Pattern Layer 1 - Optimized Grid */
 body::before {
     background-image: 
-        linear-gradient(90deg, rgba(151, 84, 203, 0.02) 1px, transparent 1px),
-        linear-gradient(0deg, rgba(151, 84, 203, 0.02) 1px, transparent 1px);
-    background-size: 50px 50px;
-    opacity: 0.4;
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.3;
 }
 
 /* Tech Pattern Layer 2 - Hexagons & Accents */
 body::after {
     background-image: 
-        linear-gradient(30deg, transparent 48%, rgba(98, 55, 160, 0.04) 48%, rgba(98, 55, 160, 0.04) 52%, transparent 52%),
-        linear-gradient(-30deg, transparent 48%, rgba(98, 55, 160, 0.04) 48%, rgba(98, 55, 160, 0.04) 52%, transparent 52%),
-        radial-gradient(circle at 15% 15%, rgba(222, 172, 245, 0.06), transparent 25%),
-        radial-gradient(circle at 85% 85%, rgba(151, 84, 203, 0.05), transparent 25%);
-    background-size: 
-        100px 173px,
-        100px 173px,
-        800px 800px,
-        800px 800px;
-    background-position: 
-        0 0,
-        50px 86.5px,
-        0 0,
-        100% 100%;
-    opacity: 0.5;
-    animation: tech-pulse-light 12s ease-in-out infinite;
+        radial-gradient(circle at 15% 15%, rgba(124, 58, 237, 0.08), transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.08), transparent 40%);
+    opacity: 1;
 }
 
 /* Animations */
@@ -111,13 +112,8 @@ body::after {
 }
 
 @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 10px rgba(151, 84, 203, 0.2); }
-    50% { box-shadow: 0 0 20px rgba(151, 84, 203, 0.5); }
-}
-
-@keyframes tech-pulse-light {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 0.6; }
+    0%, 100% { box-shadow: 0 0 10px rgba(124, 58, 237, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.4); }
 }
 
 /* Utilities */
@@ -127,16 +123,10 @@ body::after {
 
 /* Performance-optimized panel (no backdrop-filter) */
 .premium-panel {
-    background: linear-gradient(135deg, 
-        rgba(15, 23, 42, 0.95) 0%, 
-        rgba(11, 15, 26, 0.98) 100%
-    );
-    border: 1px solid rgba(151, 84, 203, 0.12);
-    box-shadow: 
-        0 0 0 1px rgba(255, 255, 255, 0.02),
-        0 8px 32px -4px rgba(0, 0, 0, 0.4),
-        0 20px 64px -8px rgba(40, 16, 78, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    background: var(--bg-surface-1);
+    border: 1px solid var(--border-medium);
+    box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-lg);
 }
 
 /* Ambient orbs (no blur) */

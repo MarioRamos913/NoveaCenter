@@ -36,26 +36,17 @@ export class LicenseController {
 
     static async create(req: Request, res: Response) {
         try {
-            const { firstName, lastName, idNumber, businessName, sector, software, duration } = req.body;
+            const { firstName, lastName, idNumber, businessName, sector, software, expirationDate } = req.body;
 
             // Basic validation
-            if (!firstName || !lastName || !idNumber || !software) {
+            if (!firstName || !lastName || !idNumber || !software || !expirationDate) {
                 return res.status(400).json({ message: 'Missing required fields' });
             }
 
-            // Calculate expiration
-            const now = new Date();
-            let expirationDate = new Date();
-            
-            if (duration === '3_months') {
-                expirationDate.setMonth(now.getMonth() + 3);
-            } else if (duration === '1_year') {
-                expirationDate.setFullYear(now.getFullYear() + 1);
-            } else if (duration === 'custom' && req.body.customDate) {
-                expirationDate = new Date(req.body.customDate);
-            } else {
-                // Default 1 month
-                expirationDate.setMonth(now.getMonth() + 1);
+            // Parse expiration date
+            const expiration = new Date(expirationDate);
+            if (isNaN(expiration.getTime())) {
+                return res.status(400).json({ message: 'Invalid expiration date' });
             }
 
             // Generate Key
@@ -68,7 +59,7 @@ export class LicenseController {
                 idNumber,
                 businessName: businessName || '',
                 sector: sector || '',
-                expirationDate,
+                expirationDate: expiration,
                 software,
                 status: 'active'
             });
