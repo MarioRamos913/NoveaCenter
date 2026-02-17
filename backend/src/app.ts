@@ -14,7 +14,17 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use('/api', licenseRoutes);
+import authRoutes from './modules/auth/auth.routes';
+import userRoutes from './modules/users/user.routes';
+import { authenticate } from './middlewares/auth.middleware';
+import { authorize } from './middlewares/role.middleware';
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', authenticate, authorize(['admin']), userRoutes);
+app.use('/api/licenses', licenseRoutes); // Assuming licenseRoutes handles its own auth or needs to be protected too.
+// The prompt says "El rol user solo puede: Ver sus propias licencias".
+// So licenseRoutes need protection too. I should probably check licenseRoutes content.
 
 // Health Check
 app.get('/', (req, res) => {

@@ -1,18 +1,22 @@
 import app from './app';
 import dotenv from 'dotenv';
 import { pool } from './config/database';
+import { seedInitialUser } from './seed';
 
 dotenv.config();
 
 const PORT = process.env.PORT || 4000;
 
 // Test DB Connection
-pool.query('SELECT NOW()', (err, res) => {
+pool.query('SELECT NOW()', async (err, res) => {
   if (err) {
     console.error('Database connection error:', err);
   } else {
     console.log('Database connected successfully at:', res.rows[0].now);
     
+    // Seed initial user
+    await seedInitialUser();
+
     app.listen(PORT, () => {
       console.log(`NovaCenter Backend running on port ${PORT}`);
     });

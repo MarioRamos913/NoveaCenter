@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { LicenseModel } from '../models/License';
 import crypto from 'crypto';
+import { AuthRequest } from '../middlewares/auth.middleware';
 
 export class LicenseController {
     
@@ -36,7 +37,7 @@ export class LicenseController {
 
     static async create(req: Request, res: Response) {
         try {
-            const { firstName, lastName, idNumber, businessName, sector, software, expirationDate } = req.body;
+            const { firstName, lastName, idNumber, businessName, sector, software, expirationDate, userId } = req.body;
 
             // Basic validation
             if (!firstName || !lastName || !idNumber || !software || !expirationDate) {
@@ -61,7 +62,8 @@ export class LicenseController {
                 sector: sector || '',
                 expirationDate: expiration,
                 software,
-                status: 'active'
+                status: 'active',
+                userId: userId ? Number(userId) : undefined
             });
 
             return res.status(201).json(newLicense);
@@ -73,7 +75,16 @@ export class LicenseController {
 
     static async getAll(req: Request, res: Response) {
         try {
-            const licenses = await LicenseModel.getAll();
+            // Cast req to any or checks if user attached
+            const user = (req as any).user;
+            
+            let licenses;
+            if (user && user.role === 'user') {
+                licenses = await LicenseModel.getAllByUser(user.id);
+            } else {
+                // Admin or no user (should be protected though)
+                licenses = await LicenseModel.getAll();
+            }
             return res.json(licenses);
         } catch (error) {
             return res.status(500).json({ message: 'Error fetching licenses' });

@@ -7,15 +7,13 @@ import './CreateLicenseForm.css';
 export default function CreateLicenseForm() {
     const { createLicense, isCreating } = useLicenses();
 
-    const [formData, setFormData] = useState<LicenseCreateRequest>({
+    const [formData, setFormData] = useState<Omit<LicenseCreateRequest, 'expirationDate'>>({
         firstName: '',
         lastName: '',
         idNumber: '',
         businessName: '',
         sector: '',
-        software: 'rutadata',
-        duration: '1_month',
-        customDate: ''
+        software: 'rutadata'
     });
 
     const [expirationDate, setExpirationDate] = useState<Date | null>(null);
@@ -28,11 +26,11 @@ export default function CreateLicenseForm() {
         e.preventDefault();
         if (!expirationDate) return;
 
-        const formattedDate = expirationDate.toISOString().split('T')[0];
-        await createLicense({ ...formData, duration: 'custom', customDate: formattedDate });
+        const formattedDate = expirationDate.toISOString();
+        await createLicense({ ...formData, expirationDate: formattedDate });
 
         // Reset form
-        setFormData({ ...formData, firstName: '', lastName: '', idNumber: '', businessName: '', sector: '' });
+        setFormData({ firstName: '', lastName: '', idNumber: '', businessName: '', sector: '', software: 'rutadata' });
         setExpirationDate(null);
     };
 

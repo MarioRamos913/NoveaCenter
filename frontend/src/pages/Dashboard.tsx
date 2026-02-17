@@ -1,16 +1,23 @@
+import { useNavigate } from 'react-router-dom';
 import { useLicenses } from '../hooks/useLicenses';
+import { useAuthStore } from '../store/authStore';
+import { AuthService } from '../services/auth.service';
 import CreateLicenseForm from '../components/CreateLicenseForm';
 import LicensesTable from '../components/LicensesTable';
-import './Dashboard.css';
+import '../views/Dashboard.css';
 
 export default function Dashboard() {
+    const { user } = useAuthStore();
+    const navigate = useNavigate();
+
     // We only need the list and update/delete actions here. 
     // The creation logic is now isolated in CreateLicenseForm.
     const { licenses, loading, error, updateStatus, deleteLicense } = useLicenses();
 
-    console.log('Dashboard licenses:', licenses);
-    console.log('Dashboard loading:', loading);
-    console.log('Dashboard error:', error);
+    const handleLogout = async () => {
+        await AuthService.logout();
+        navigate('/login');
+    };
 
     if (loading) {
         return (
@@ -48,14 +55,25 @@ export default function Dashboard() {
                         NovaCenter <span className="title-accent">Pro</span>
                     </h1>
                 </div>
-                <p className="dashboard-subtitle">
-                    Gestión Avanzada de Licencias & Suscripciones
-                </p>
+
+                <div className="header-actions">
+                    <p className="header-user-info">
+                        {user?.username} <span className="header-user-role">{user?.role}</span>
+                    </p>
+                    <button
+                        onClick={handleLogout}
+                        className="header-logout-btn"
+                    >
+                        Salir
+                    </button>
+                </div>
             </header>
 
             <main className="dashboard-main">
-                {/* Formulario Aislado */}
-                <CreateLicenseForm />
+                {/* Formulario Aislado - Only for Admins */}
+                {user?.role === 'admin' && (
+                    <CreateLicenseForm />
+                )}
 
                 {/* Tabla Virtualizada */}
                 <LicensesTable

@@ -10,6 +10,7 @@ export interface ILicense {
     status: 'active' | 'expired' | 'revoked';
     expirationDate: Date;
     software: 'rutadata' | 'other';
+    userId?: number;
 }
 
 export class LicenseModel {
@@ -23,7 +24,8 @@ export class LicenseModel {
             sector: row.sector,
             status: row.status as any,
             expirationDate: new Date(row.expiration_date),
-            software: row.software as any
+            software: row.software as any,
+            userId: row.user_id 
         };
     }
 
@@ -35,14 +37,19 @@ export class LicenseModel {
 
     static async create(license: ILicense): Promise<ILicense> {
         await pool.query(
-            'INSERT INTO licenses (key, first_name, last_name, id_number, business_name, sector, software, status, expiration_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
-            [license.key, license.firstName, license.lastName, license.idNumber, license.businessName, license.sector, license.software, license.status, license.expirationDate]
+            'INSERT INTO licenses (key, first_name, last_name, id_number, business_name, sector, software, status, expiration_date, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+            [license.key, license.firstName, license.lastName, license.idNumber, license.businessName, license.sector, license.software, license.status, license.expirationDate, license.userId || null]
         );
         return license;
     }
 
     static async getAll(): Promise<ILicense[]> {
         const result = await pool.query('SELECT * FROM licenses ORDER BY created_at DESC');
+        return result.rows.map(this.mapRowToLicense);
+    }
+    
+    static async getAllByUser(userId: number): Promise<ILicense[]> {
+        const result = await pool.query('SELECT * FROM licenses WHERE user_id = $1 ORDER BY created_at DESC', [userId]);
         return result.rows.map(this.mapRowToLicense);
     }
 

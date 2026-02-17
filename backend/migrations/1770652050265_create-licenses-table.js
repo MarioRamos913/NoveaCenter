@@ -50,6 +50,8 @@ export const up = (pgm) => {
             notNull: true,
             default: pgm.func('CURRENT_TIMESTAMP'),
         },
+    }, {
+        ifNotExists: true
     });
 };
 

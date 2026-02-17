@@ -1,37 +1,23 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { License, LicenseCreateRequest } from '../models/License';
-import { API_CONFIG } from '../config/api';
+import api from '../services/api';
 import { useToast } from '../components/Toast';
 
 const fetchLicenses = async (): Promise<License[]> => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/licenses`);
-    if (!response.ok) throw new Error('Failed to fetch licenses');
-    return response.json();
+    const response = await api.get('/licenses');
+    return response.data;
 };
 
 const createLicenseApi = async (request: LicenseCreateRequest): Promise<void> => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/licenses`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(request)
-    });
-    if (!response.ok) throw new Error('Failed to create license');
+    await api.post('/licenses', request);
 };
 
 const updateStatusApi = async ({ key, status }: { key: string; status: 'active' | 'revoked' }): Promise<void> => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/licenses/${key}/status`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
-    });
-    if (!response.ok) throw new Error('Failed to update status');
+    await api.patch(`/licenses/${key}/status`, { status });
 };
 
 const deleteLicenseApi = async (key: string): Promise<void> => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/licenses/${key}`, {
-        method: 'DELETE'
-    });
-    if (!response.ok) throw new Error('Failed to delete license');
+    await api.delete(`/licenses/${key}`);
 };
 
 export const useLicenses = () => {

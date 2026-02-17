@@ -18,6 +18,5 @@ export interface LicenseCreateRequest {
     businessName?: string;
     sector?: string;
     software: 'rutadata' | 'other';
-    duration: '1_month' | '3_months' | '1_year' | 'custom';
-    customDate?: string;
+    expirationDate: string;
 }
