@@ -2,7 +2,18 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+
+// Routes
+import authRoutes from './modules/auth/auth.routes';
+import userRoutes from './modules/users/user.routes';
+import roleRoutes from './modules/roles/role.routes';
+import resourceRoutes from './modules/resources/resource.routes';
+import menuRoutes from './modules/menu/menu.routes';
 import licenseRoutes from './routes/licenseRoutes';
+
+// Middlewares
+import { authenticate } from './middlewares/auth.middleware';
+import { authorize } from './middlewares/role.middleware';
 
 dotenv.config();
 
@@ -13,21 +24,20 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-// Routes
-import authRoutes from './modules/auth/auth.routes';
-import userRoutes from './modules/users/user.routes';
-import { authenticate } from './middlewares/auth.middleware';
-import { authorize } from './middlewares/role.middleware';
-
-// Routes
+// Public routes
 app.use('/api/auth', authRoutes);
+
+// Protected routes — Solo admin
 app.use('/api/users', authenticate, authorize(['admin']), userRoutes);
-app.use('/api/licenses', licenseRoutes); // Assuming licenseRoutes handles its own auth or needs to be protected too.
-// The prompt says "El rol user solo puede: Ver sus propias licencias".
-// So licenseRoutes need protection too. I should probably check licenseRoutes content.
+app.use('/api/roles', authenticate, authorize(['admin']), roleRoutes);
+app.use('/api/resources', authenticate, authorize(['admin']), resourceRoutes);
+
+// Protected routes — Cualquier usuario autenticado
+app.use('/api/menu', authenticate, menuRoutes);
+app.use('/api/licenses', licenseRoutes);
 
 // Health Check
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.send('NovaCenter API is running');
 });
 

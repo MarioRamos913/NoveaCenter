@@ -1,6 +1,6 @@
 import { useRef, memo, useCallback } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import type { License } from '../models/License';
+import type { License } from '../../models/License';
 import './LicensesTable.css';
 
 interface LicensesTableProps {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useLicenses } from '../hooks/useLicenses';
-import type { LicenseCreateRequest } from '../models/License';
-import DatePicker from './DatePicker';
+import { useLicenses } from '../../hooks/useLicenses';
+import type { LicenseCreateRequest } from '../../models/License';
+import DatePicker from '../DatePricker/DatePicker';
 import './CreateLicenseForm.css';
 
 export default function CreateLicenseForm() {

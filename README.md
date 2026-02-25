@@ -1,59 +1,89 @@
 # NovaCenter - Sistema de Gestión de Licencias
 
-Bienvenido a **NovaCenter**, un sistema moderno y centralizado para la generación, administración y validación de licencias de software. Este proyecto está diseñado con una arquitectura modular, separando claramente el **Backend** (lógica de negocio y API) del **Frontend** (interfaz de usuario).
+Bienvenido a **NovaCenter**, un sistema moderno y centralizado para la generación, administración y validación de licencias de software. Diseñado con una arquitectura modular que incluye **autenticación JWT**, **control de acceso basado en roles (RBAC)** y una interfaz premium.
 
-##  Estructura del Proyecto
+## 📋 Características Principales
 
-El proyecto se divide en dos carpetas principales:
+*   **Gestión de Licencias**: Generación, activación, revocación y eliminación de claves cifradas.
+*   **Autenticación segura**: Login con JWT (Access + Refresh Tokens), hashing con bcrypt.
+*   **RBAC (Control de Acceso por Roles)**: Roles dinámicos, recursos, y permisos granulares.
+*   **Panel Administrativo**: CRUD completo para usuarios, roles y recursos.
+*   **Menú Dinámico**: Sidebar que se genera automáticamente según los permisos del usuario.
+*   **API de Validación**: Endpoint público para que aplicaciones externas validen licencias.
 
-*   **`backend/`**: Contiene el servidor, la API REST y la lógica para crear y validar licencias.
-*   **`frontend/`**: Contiene la aplicación web (React) desde donde los administradores interactúan con el sistema.
+## 🏗 Estructura del Proyecto
+
+```
+novacenter/
+├── backend/         # API REST (Node.js, Express, TypeScript, PostgreSQL)
+└── frontend/        # SPA (React 19, TypeScript, Vite, CSS Vanilla)
+```
 
 ## 🚀 Inicio Rápido
 
-Para poner en marcha el sistema completo, necesitas dos terminales (una para el backend y otra para el frontend).
+### Requisitos
+*   **Node.js** 18+
+*   **PostgreSQL** 12+
 
-### 1. Iniciar el Backend
-El backend es el "cerebro" que procesa los datos. Debe estar corriendo para que el frontend funcione.
+### 1. Configurar el Backend
 
 ```bash
 cd backend
-npm install  # Solo la primera vez
+npm install
+```
+
+Crear archivo `.env`:
+```env
+PORT=4000
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=tu_contraseña
+DB_NAME=BD_novacenter
+
+JWT_SECRET=tu_clave_secreta_jwt
+REFRESH_TOKEN_SECRET=tu_clave_secreta_refresh
+```
+
+Ejecutar migraciones y arrancar:
+```bash
+# Aplicar migraciones (incluyendo tablas RBAC)
+$env:DATABASE_URL="postgres://usuario:contraseña@localhost:5432/BD_novacenter"
+npx node-pg-migrate up
+
+# Iniciar servidor
 npm run dev
 ```
 > El servidor iniciará en `http://localhost:4000`.
 
 ### 2. Iniciar el Frontend
-La interfaz visual para el usuario.
 
 ```bash
 cd frontend
-npm install  # Solo la primera vez
+npm install
 npm run dev
 ```
 > La aplicación abrirá en `http://localhost:5173`.
 
-##  Guía de Uso
+## 🔑 Guía de Uso
 
-Una vez que ambos servidores (Backend y Frontend) están corriendo:
+1.  Abre `http://localhost:5173` — serás redirigido al **Login**.
+2.  **Credenciales iniciales**: La migración crea un usuario admin por defecto (ver seed en migration).
+3.  Al iniciar sesión como admin verás el **Dashboard** con sidebar dinámico:
+    *   **Dashboard** — Vista principal con tabla de licencias.
+    *   **Usuarios** — CRUD de usuarios + asignación de roles.
+    *   **Roles** — CRUD de roles + asignación de recursos/permisos.
+    *   **Recursos** — CRUD de recursos del sistema.
+4.  Los usuarios con rol `user` solo ven las secciones permitidas por sus roles.
 
-1.  Abre tu navegador en `http://localhost:5173`.
-2.  Verás el **Panel Principal (Dashboard)** de NovaCenter.
-3.  **Generar una Licencia**:
-    *   En el formulario "Nueva Suscripción", completa los datos del cliente: **Nombres**, **Apellidos**, **Cédula/ID** y selecciona la **Duración**.
-    *   Haz clic en "Generar Licencia".
-    *   El sistema validará los datos y animará la creación de la nueva licencia en la tabla.
-4.  **Ver Licencias Activas**:
-    *   A la derecha verás una tabla estilizada con todas las licencias registradas.
-    *   Podrás ver el estado (ACTIVA/REVOCADA) y la fecha de vencimiento.
+## 🛠 Tecnologías
 
-## 🛠 Tecnologías Principales
-
-*   **Node.js & Express**: Para un backend rápido y escalable.
-*   **PostgreSQL**: Base de datos relacional con sistema de migraciones.
-*   **React & Vite**: Para una interfaz de usuario dinámica y veloz.
-*   **CSS Vanilla**: Estilos modulares para un diseño moderno y mantenible.
-*   **TypeScript**: Utilizamos TypeScript en todo el proyecto para garantizar un código más robusto y con menos errores.
+| Capa | Tecnologías |
+|---|---|
+| **Backend** | Node.js, Express, TypeScript, PostgreSQL, JWT, bcrypt, Zod |
+| **Frontend** | React 19, TypeScript, Vite, CSS Vanilla, Zustand |
+| **Base de Datos** | PostgreSQL con node-pg-migrate |
+| **Seguridad** | HMAC SHA256 (licencias), bcrypt (contraseñas), JWT (sesiones), RBAC (permisos) |
 
 ---
 *Revisa los archivos README.md dentro de cada carpeta (`backend/` y `frontend/`) para detalles técnicos específicos.*

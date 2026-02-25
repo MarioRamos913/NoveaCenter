@@ -1,11 +1,16 @@
 import { Request, Response } from 'express';
 import { UserService } from './user.service';
 import { createUserSchema, updateUserSchema } from './user.schema';
+import { z } from 'zod';
+
+const assignRolesSchema = z.object({
+    roleIds: z.array(z.number().int().positive()),
+});
 
 export class UserController {
     
-    // Admin only: Get all users
-    static async getAll(req: Request, res: Response) {
+    // Admin only: Get all users (con roles)
+    static async getAll(_req: Request, res: Response) {
         try {
             const users = await UserService.getAll();
             return res.json(users);
@@ -25,9 +30,9 @@ export class UserController {
 
             const newUser = await UserService.create(validation.data);
             return res.status(201).json(newUser);
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(error);
-            if (error.message === 'Username already exists') {
+            if (error instanceof Error && error.message === 'Username already exists') {
                 return res.status(409).json({ message: 'Username already exists' });
             }
             return res.status(500).json({ message: 'Error creating user' });
@@ -45,27 +50,17 @@ export class UserController {
 
             const { username, role, password } = validation.data;
             if (!username || !role) {
-                 // Although optional in schema for partial updates, existing logic required them. 
-                 // Updating logic to align with schema: if provided, update.
-                 // Actually, schema made them optional, but let's check if we strictly require them for PUT or allow PATCH? 
-                 // Assuming PUT-like behavior or strict update based on previous code.
-                 // Previous code: if (!username || !role) return 400.
-                 // Let's enforce them if we want to follow previous strictness, or allow partial if we want PATCH.
-                 // Let's assume strict update for now as per previous code, but ensure types match.
-                 if (!username || !role) {
-                     return res.status(400).json({ message: 'Missing required fields' });
-                 }
-                 
-                 const updatedUser = await UserService.update(Number(id), username, role, password);
-                 if (!updatedUser) {
-                    return res.status(404).json({ message: 'User not found' });
-                 }
-    
-                 return res.json(updatedUser);
+                return res.status(400).json({ message: 'Missing required fields: username and role' });
             }
-            // This unreachable code block handles the case where username/role might be missing if we used partial schema
-            return res.status(400).json({ message: 'Invalid update data' });
 
+            const updatedUser = await UserService.update(Number(id), username, role, password);
+            if (!updatedUser) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            // Retornar usuario con roles
+            const userWithRoles = await UserService.getUserWithRoles(Number(id));
+            return res.json(userWithRoles);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: 'Error updating user' });
@@ -84,6 +79,29 @@ export class UserController {
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: 'Error deleting user' });
+        }
+    }
+
+    // Admin only: Assign roles to user
+    static async assignRoles(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const validation = assignRolesSchema.safeParse(req.body);
+            if (!validation.success) {
+                return res.status(400).json({ message: 'Validation error', errors: validation.error.format() });
+            }
+
+            const userWithRoles = await UserService.assignRoles(Number(id), validation.data.roleIds);
+            if (!userWithRoles) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            return res.json(userWithRoles);
+        } catch (error: unknown) {
+            console.error(error);
+            if (error instanceof Error && error.message === 'User not found') {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            return res.status(500).json({ message: 'Error assigning roles' });
         }
     }
 }

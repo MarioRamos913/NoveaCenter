@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { pool } from '../../config/database';
 import { UserService } from '../users/user.service';
 import { CreateUserDTO, IUser } from '../users/user.model';
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from './auth.utils';
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken, getUserRolesAndPermissions } from './auth.utils';
 import { QueryResult } from 'pg';
 
 export class AuthService {
@@ -11,7 +11,7 @@ export class AuthService {
         return await UserService.create(userData);
     }
 
-    static async login(username: string, password: string): Promise<{ user: IUser, accessToken: string, refreshToken: string } | null> {
+    static async login(username: string, password: string): Promise<{ user: IUser & { roles: string[]; permissions: string[] }; accessToken: string; refreshToken: string } | null> {
         const user = await UserService.findByUsername(username);
         if (!user || user.password === undefined) {
              return null;
@@ -22,12 +22,11 @@ export class AuthService {
             return null;
         }
 
-        // Generate tokens
-        const accessToken = generateAccessToken(user);
+        // Generar tokens (accessToken ahora es async porque consulta roles/permisos)
+        const accessToken = await generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
 
-        // Store refresh token
-        // Calculate expiration date (7 days from now)
+        // Almacenar refresh token
         const expiresAt = new Date();
         expiresAt.setDate(expiresAt.getDate() + 7);
 
@@ -36,21 +35,24 @@ export class AuthService {
             [user.id, refreshToken, expiresAt]
         );
 
-        // Remove password from user object before returning
+        // Obtener roles y permisos para la respuesta
+        const { roles, permissions } = await getUserRolesAndPermissions(user.id);
+
+        // Remover password del usuario antes de retornar
         const { password: _, ...userWithoutPassword } = user;
 
         return {
-            user: userWithoutPassword as IUser, // Cast back to IUser but it's safe
+            user: { ...userWithoutPassword, roles, permissions } as IUser & { roles: string[]; permissions: string[] },
             accessToken,
             refreshToken
         };
     }
 
-    static async refresh(token: string): Promise<{ accessToken: string, refreshToken: string } | null> {
+    static async refresh(token: string): Promise<{ accessToken: string; refreshToken: string } | null> {
         try {
-            const decoded = verifyRefreshToken(token) as any;
+            const decoded = verifyRefreshToken(token) as { id: number; username: string };
             
-            // Check if token exists in DB
+            // Verificar que el token existe en la BD
             const result: QueryResult = await pool.query(
                 'SELECT * FROM refresh_tokens WHERE token = $1 AND user_id = $2',
                 [token, decoded.id]
@@ -61,19 +63,18 @@ export class AuthService {
             }
 
             const storedToken = result.rows[0];
-            // Check if expired in DB (though verify checks signature expiration)
             if (new Date() > new Date(storedToken.expires_at)) {
-                await this.logout(token); // Cleanup
+                await this.logout(token);
                 return null;
             }
 
             const user = await UserService.findById(decoded.id);
             if (!user) return null;
 
-            // Rotate tokens (optional but recommended: delete old, create new)
+            // Rotar tokens
             await this.logout(token);
 
-            const newAccessToken = generateAccessToken(user);
+            const newAccessToken = await generateAccessToken(user);
             const newRefreshToken = generateRefreshToken(user);
             
             const expiresAt = new Date();

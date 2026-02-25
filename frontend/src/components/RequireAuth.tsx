@@ -1,22 +1,35 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 
 interface RequireAuthProps {
     allowedRoles?: string[];
+    requiredPermissions?: string[];
 }
 
-export const RequireAuth = ({ allowedRoles }: RequireAuthProps) => {
+const RequireAuth = ({ allowedRoles, requiredPermissions }: RequireAuthProps) => {
     const { isAuthenticated, user } = useAuthStore();
-    const location = useLocation();
 
-    if (!isAuthenticated) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
+    if (!isAuthenticated || !user) {
+        return <Navigate to="/login" replace />;
     }
 
-    if (allowedRoles && user && !allowedRoles.includes(user.role)) {
-        // Redirect to dashboard if role not allowed, or a specific unauthorized page
-        return <Navigate to="/dashboard" replace />;
+    // Verificar roles si se especifican
+    if (allowedRoles && allowedRoles.length > 0) {
+        const hasRole = user.roles.some(role => allowedRoles.includes(role));
+        if (!hasRole) {
+            return <Navigate to="/dashboard" replace />;
+        }
+    }
+
+    // Verificar permisos si se especifican
+    if (requiredPermissions && requiredPermissions.length > 0) {
+        const hasPermission = requiredPermissions.every(p => user.permissions.includes(p));
+        if (!hasPermission) {
+            return <Navigate to="/dashboard" replace />;
+        }
     }
 
     return <Outlet />;
 };
+
+export default RequireAuth;

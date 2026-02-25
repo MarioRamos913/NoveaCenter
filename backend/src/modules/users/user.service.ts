@@ -1,9 +1,9 @@
-import { UserModel, CreateUserDTO, IUser } from './user.model';
+import { UserModel, CreateUserDTO, IUser, IUserWithRoles } from './user.model';
 import bcrypt from 'bcrypt';
 
 export class UserService {
-    static async getAll(): Promise<IUser[]> {
-        return await UserModel.getAll();
+    static async getAll(): Promise<IUserWithRoles[]> {
+        return await UserModel.getAllWithRoles();
     }
 
     static async create(userData: CreateUserDTO): Promise<IUser> {
@@ -14,18 +14,22 @@ export class UserService {
             throw new Error('Username already exists');
         }
 
-        // Only hash if passing to model directly, but model expects hashed?
-        // Wait, Controller was hashing. Service should responsible for business logic.
-        // UserModel is raw data access.
-        // Service should hash password.
-        
         const hashedPassword = await bcrypt.hash(password!, 10);
         
-        return await UserModel.create({
+        const user = await UserModel.create({
             username,
             password: hashedPassword,
             role
         });
+
+        // Asignar rol correspondiente en la tabla user_roles
+        const { pool } = await import('../../config/database');
+        const roleResult = await pool.query('SELECT id FROM roles WHERE name = $1', [role]);
+        if (roleResult.rows.length > 0) {
+            await UserModel.assignRoles(user.id, [roleResult.rows[0].id]);
+        }
+
+        return user;
     }
 
     static async update(id: number, username: string, role: 'admin' | 'user', password?: string): Promise<IUser | undefined> {
@@ -33,7 +37,18 @@ export class UserService {
         if (password) {
             hashedPassword = await bcrypt.hash(password, 10);
         }
-        return await UserModel.update(id, username, role, hashedPassword);
+        const user = await UserModel.update(id, username, role, hashedPassword);
+        
+        // Sincronizar rol en user_roles
+        if (user) {
+            const { pool } = await import('../../config/database');
+            const roleResult = await pool.query('SELECT id FROM roles WHERE name = $1', [role]);
+            if (roleResult.rows.length > 0) {
+                await UserModel.assignRoles(user.id, [roleResult.rows[0].id]);
+            }
+        }
+
+        return user;
     }
 
     static async delete(id: number): Promise<boolean> {
@@ -46,5 +61,18 @@ export class UserService {
 
     static async findByUsername(username: string): Promise<IUser | undefined> {
         return await UserModel.findByUsername(username);
+    }
+
+    static async getUserWithRoles(id: number): Promise<IUserWithRoles | undefined> {
+        return await UserModel.getUserWithRoles(id);
+    }
+
+    static async assignRoles(userId: number, roleIds: number[]): Promise<IUserWithRoles | undefined> {
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        await UserModel.assignRoles(userId, roleIds);
+        return await UserModel.getUserWithRoles(userId);
     }
 }

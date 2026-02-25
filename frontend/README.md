@@ -1,87 +1,109 @@
 # NovaCenter Pro - Frontend
 
-## 📖 Descripción del Sistema
+## 📖 Descripción
 
-**NovaCenter Pro** es la interfaz administrativa para la gestión centralizada de licencias de software SaaS. Está diseñada para permitir a los administradores generar, monitorear y revocar claves de acceso de manera segura y eficiente.
-
-El frontend actúa como una **Single Page Application (SPA)** moderna que se comunica con una API REST para persistir los datos. Su objetivo principal es ofrecer una experiencia de usuario (UX) premium, fluida y altamente reactiva, eliminando la complejidad visual de las operaciones de base de datos.
+**NovaCenter Pro** es la interfaz administrativa para la gestión centralizada de licencias de software SaaS. Incluye autenticación JWT, control de acceso basado en roles (RBAC), panel administrativo completo y menú dinámico según permisos.
 
 ## 🛠 Stack Tecnológico
 
-Este proyecto utiliza tecnologías de vanguardia para garantizar rendimiento, mantenibilidad y escalabilidad:
+| Categoría | Tecnología |
+|---|---|
+| **UI** | React 19, TypeScript |
+| **Build** | Vite |
+| **Estilos** | CSS Vanilla (modular, sin frameworks) |
+| **Estado** | Zustand (auth store) |
+| **Routing** | React Router v6 |
+| **Tipografías** | Space Grotesk (títulos), Inter (UI) |
 
-### Core
-*   **React 19**: Librería principal para la construcción de la interfaz por componentes.
-*   **TypeScript**: Lenguaje que añade tipado estático para prevenir errores en tiempo de desarrollo.
-*   **Vite**: Entorno de desarrollo de próxima generación, ultra rápido para bundling y Hot Module Replacement (HMR).
-
-### Estilos y Diseño
-*   **Tailwind CSS v4**: La última versión del framework de utilidad.
-    *   **Motor Oxide**: Compilación en tiempo real escrita en Rust.
-    *   **CSS-first configuration**: Configuración de tema directamente en CSS via `@theme`, eliminando archivos JavaScript de configuración.
-    *   **Variables Nativas**: Uso extensivo de CSS Variables para colores, fuentes y efectos.
-*   **Fuentes**:
-    *   `Space Grotesk`: Para títulos y encabezados, dando un toque tecnológico/futurista.
-    *   `Inter`: Para legibilidad óptima en interfaces de usuario y datos.
-
-## 🧠 Arquitectura y Funcionamiento
-
-El frontend sigue una arquitectura basada en **Hooks** y **Componentes Funcionales**.
-
-### 1. Flujo de Datos (`useLicenses.ts`)
-Toda la lógica de negocio y comunicación con el backend está encapsulada en el custom hook `useLicenses`.
-*   **Estado Centralizado**: Maneja la lista de licencias y el estado de carga (`loading`).
-*   **Operaciones CRUD**:
-    *   `createLicense`: Envía POST a la API y actualiza la lista optimísticamente.
-    *   `updateStatus`: Permite revocar/activar sin recargar la página.
-    *   `deleteLicense`: Eliminación permanente.
-
-### 2. Capa Visual (`Dashboard.tsx`)
-El componente de vista es puramente presentacional ("dumb component" en lógica, "smart" en UI).
-*   **Glassmorphism**: Uso de `backdrop-filter: blur()` y colores con canal alfa (transparencia) para crear sensación de profundidad.
-*   **Feedback**:
-    *   Indicadores de carga en botones.
-    *   Badges de estado animados (pulsaciones para "Activo").
-    *   Gradientes que reaccionan al hover y foco.
-
-### 3. Configuración de Estilos (`index.css`)
-Aquí reside la "magia" de Tailwind v4. Definimos el sistema de diseño "Deep Space":
-*   `--color-void`: El fondo oscuro profundo.
-*   `--color-neon-*`: La paleta de acentos vibrantes.
-*   `--font-display`: La familia tipográfica para encabezados.
-
-## 🚀 Guía de Desarrollo
-
-### Requisitos Previos
-*   Node.js 18+ (Requerido para Vite/React 19)
-
-### Instalación y Ejecución
-
-1.  **Instalar dependencias**:
-    ```bash
-    npm install
-    ```
-
-2.  **Iniciar servidor de desarrollo**:
-    ```bash
-    npm run dev
-    ```
-    Accesible en `http://localhost:5173`.
-
-3.  **Construir para producción**:
-    ```bash
-    npm run build
-    ```
-    Genera la carpeta `dist/` optimizada y minificada.
-
-## 📂 Estructura de Directorios
+## 🧠 Arquitectura
 
 ```
 src/
-├── hooks/             # Lógica de negocio reutilizable (useLicenses)
-├── models/            # Interfaces TypeScript defininedo la forma de los datos
-├── views/             # Páginas/Vistas principales (Dashboard)
-├── assets/            # Recursos estáticos
-├── index.css          # Punto de entrada de estilos y configuración del tema
-└── main.tsx           # Punto de montaje de React
+├── components/
+│   ├── DashboardLayout/       # Layout principal: sidebar dinámico + header + outlet
+│   │   ├── DashboardLayout.tsx
+│   │   └── DashboardLayout.css
+│   ├── CreateLicense/         # Formulario de creación de licencias
+│   ├── LicensesTable/         # Tabla virtualizada de licencias
+│   ├── RequireAuth.tsx        # Guard de rutas (auth + roles + permisos)
+│   └── Toast.tsx              # Sistema de notificaciones floating
+├── hooks/
+│   └── useLicenses.ts         # Hook con lógica CRUD de licencias
+├── models/
+│   ├── License.ts             # Interfaz de licencia
+│   ├── User.ts                # Interfaz de usuario (con roles)
+│   ├── Role.ts                # Interfaz de rol (con recursos)
+│   ├── Resource.ts            # Interfaz de recurso del sistema
+│   └── MenuItem.ts            # Interfaz de ítem del menú dinámico
+├── pages/
+│   ├── Login/Login.tsx        # Página de autenticación
+│   ├── Dashboard.tsx          # Vista principal de licencias
+│   ├── AdminUsers/            # CRUD de usuarios + asignación de roles
+│   ├── AdminRoles/            # CRUD de roles + asignación de recursos
+│   ├── AdminResources/        # CRUD de recursos del sistema
+│   └── Admin/Admin.css        # Estilos compartidos admin (tablas, modales, badges)
+├── services/
+│   ├── api.ts                 # Axios instance con interceptors (refresh token)
+│   ├── auth.service.ts        # Login, register, logout, refresh
+│   ├── user.service.ts        # CRUD usuarios + assignRoles
+│   ├── role.service.ts        # CRUD roles + assignResources
+│   ├── resource.service.ts    # CRUD recursos
+│   └── menu.service.ts        # Obtener menú dinámico
+├── store/
+│   └── authStore.ts           # Zustand: user, tokens, roles[], permissions[], helpers
+├── views/
+│   └── Dashboard.css          # Estilos del dashboard principal
+├── index.css                  # Variables CSS globales, sistema de diseño
+├── App.tsx                    # Rutas principales
+└── main.tsx                   # Punto de montaje
 ```
+
+## 🔐 Autenticación y RBAC
+
+### Flujo de Login
+1.  El usuario ingresa credenciales en `/login`.
+2.  Backend retorna `accessToken`, `refreshToken`, y datos del usuario con `roles[]` y `permissions[]`.
+3.  El store Zustand persiste tokens y datos en `localStorage`.
+4.  `api.ts` intercepta respuestas 401 para renovar automáticamente con refresh token.
+
+### Protección de Rutas
+*   **`RequireAuth`**: Componente wrapper que verifica autenticación.
+    *   `allowedRoles`: Restringe acceso por roles (ej: `['admin']`).
+    *   `requiredPermissions`: Restringe por permisos/recursos específicos.
+
+### Menú Dinámico
+*   Al cargar `DashboardLayout`, se solicita `GET /api/menu`.
+*   El backend retorna solo los recursos accesibles al usuario según sus roles.
+*   El sidebar se construye dinámicamente con los ítems recibidos.
+
+## 🎨 Sistema de Diseño
+
+*   **Tema "Deep Space"**: Fondo oscuro con acentos vibrantes (purple/blue).
+*   **Glassmorphism**: `backdrop-filter: blur()` en cards, modales y header.
+*   **Variables CSS**: Sistema completo de tokens (`--color-*`, `--font-*`, etc.).
+*   **Micro-animaciones**: Transiciones suaves en hover, badges pulsantes, toasts flotantes.
+
+## 🚀 Desarrollo
+
+### Requisitos
+*   Node.js 18+
+*   Backend corriendo en `http://localhost:4000`
+
+### Comandos
+```bash
+npm install        # Instalar dependencias
+npm run dev        # Servidor desarrollo (http://localhost:5173)
+npm run build      # Build de producción (dist/)
+npm run preview    # Preview del build
+```
+
+## 📌 Rutas
+
+| Ruta | Componente | Protección | Descripción |
+|------|------------|------------|-------------|
+| `/login` | Login | Pública | Página de autenticación |
+| `/dashboard` | Dashboard | Auth | Tabla de licencias + formulario (admin) |
+| `/dashboard/licenses` | Dashboard | Admin | Gestión de licencias |
+| `/dashboard/users` | AdminUsers | Admin | CRUD de usuarios |
+| `/dashboard/roles` | AdminRoles | Admin | CRUD de roles |
+| `/dashboard/resources` | AdminResources | Admin | CRUD de recursos |

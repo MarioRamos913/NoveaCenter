@@ -75,14 +75,15 @@ export class LicenseController {
 
     static async getAll(req: Request, res: Response) {
         try {
-            // Cast req to any or checks if user attached
-            const user = (req as any).user;
+            const authReq = req as AuthRequest;
+            const user = authReq.user;
             
             let licenses;
-            if (user && user.role === 'user') {
+            // Si el usuario tiene rol admin, puede ver todas las licencias
+            const isAdmin = user?.roles?.includes('admin') ?? false;
+            if (user && !isAdmin) {
                 licenses = await LicenseModel.getAllByUser(user.id);
             } else {
-                // Admin or no user (should be protected though)
                 licenses = await LicenseModel.getAll();
             }
             return res.json(licenses);

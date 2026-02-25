@@ -1,41 +1,55 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-interface User {
+interface AuthUser {
     id: number;
     username: string;
-    role: 'admin' | 'user';
+    roles: string[];
+    permissions: string[];
 }
 
 interface AuthState {
-    user: User | null;
+    user: AuthUser | null;
     accessToken: string | null;
     refreshToken: string | null;
     isAuthenticated: boolean;
-    login: (user: User, accessToken: string, refreshToken: string) => void;
+    login: (user: AuthUser, accessToken: string, refreshToken: string) => void;
     logout: () => void;
     setTokens: (accessToken: string, refreshToken: string) => void;
+    hasRole: (role: string) => boolean;
+    hasPermission: (code: string) => boolean;
 }
 
 export const useAuthStore = create<AuthState>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             user: null,
             accessToken: null,
             refreshToken: null,
             isAuthenticated: false,
-            login: (user, accessToken, refreshToken) => set({ user, accessToken, refreshToken, isAuthenticated: true }),
-            logout: () => set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false }),
-            setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
+
+            login: (user, accessToken, refreshToken) => {
+                set({ user, accessToken, refreshToken, isAuthenticated: true });
+            },
+
+            logout: () => {
+                set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false });
+            },
+
+            setTokens: (accessToken, refreshToken) => {
+                set({ accessToken, refreshToken });
+            },
+
+            hasRole: (role: string) => {
+                const state = get();
+                return state.user?.roles.includes(role) ?? false;
+            },
+
+            hasPermission: (code: string) => {
+                const state = get();
+                return state.user?.permissions.includes(code) ?? false;
+            },
         }),
-        {
-            name: 'auth-storage',
-            partialize: (state) => ({ 
-                user: state.user, 
-                accessToken: state.accessToken, 
-                refreshToken: state.refreshToken, 
-                isAuthenticated: state.isAuthenticated 
-            }),
-        }
+        { name: 'auth-storage' }
     )
 );
